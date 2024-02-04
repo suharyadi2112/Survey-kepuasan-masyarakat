@@ -14,21 +14,24 @@ class Laporan extends Controller
     }
     
     public function index(Request $request){
-
+ 
         if ($request->ajax()) {
 
-            $totalsPerDay = DB::table('surveys')
-            ->selectRaw('DATE(created_at) as date, value, COUNT(*) as total')
-            ->groupBy('date', 'value')
-            ->get();
+            //--date
+            $querydate = DB::table('surveys')->selectRaw('value, COUNT(*) as total')->groupBy('value');
+            if ($request->filled('tanggal')) {
+                $querydate->whereDate('created_at', $request->tanggal);
+            }
+            $totalsPerDay = $querydate->get();
 
-            $totalsPerMonth = DB::table('surveys')
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, value, COUNT(*) as total')
-            ->groupBy('year', 'month', 'value')
-            ->get();
-
-
-
+            //--month
+            $querymonth = DB::table('surveys')->selectRaw('value, COUNT(*) as total')->groupBy('value');
+            if ($request->filled('bulan')) {
+                list($year, $month) = explode('-', $request->bulan);
+                $querymonth->whereYear('created_at', $year)->whereMonth('created_at', $month);
+            }
+            $totalsPerMonth = $querymonth->get();
+    
             return response()->json(['status' => 'success', 'message' => 'success retrieved data', 'dataPerdays' => $totalsPerDay, 'dataPerMonth' => $totalsPerMonth], 200);
         }
 

@@ -10,7 +10,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>AdminLTE 3 | Starter</title>
+  <title>Survey Kepuasan Masyarakat</title>
   
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -52,7 +52,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <a href="index3.html" class="brand-link">
         <img src="../img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
           style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <span class="brand-text font-weight-light">Admin Survey</span>
       </a>
 
       <!-- Sidebar -->
@@ -88,17 +88,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Content Header (Page header) -->
       <div class="content-header">
         <div class="container-fluid">
-          <div class="row mb-2">
+          {{-- <div class="row mb-2">
             <div class="col-sm-6">
               <h1 class="m-0 text-dark">Laporan</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Starter Page</li>
+                <li class="breadcrumb-item active">Laporan</li>
               </ol>
             </div><!-- /.col -->
-          </div><!-- /.row -->
+          </div><!-- /.row --> --}}
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content-header -->
@@ -107,13 +107,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="content">
         <div class="container-fluid">
           <div class="row">
+
             <div class="col-lg-6">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">Laporan Per Hari</h5>
-                    <div>
-                        <canvas id="myChartPie" style="width: 500px;height: 500px"></canvas>
+                  <div class="row">
+                    <div class="col-lg-6 mt-2">
+                      <h5 class="card-title">Laporan Per-Hari</h5>
                     </div>
+                    <div class="col-lg-6">
+                        <input type="date" class="form-control" id="tanggalFilter">
+                    </div>
+                  </div>
+                  <hr/>
+                    <div id="spinnerDays" style="display: none;">
+                        <div class="d-flex justify-content-center" >
+                          <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        </div>
+                    </div>
+                    <div id="nilDataDays"></div>
+                    <canvas id="myChartPie" style="width: 500px;height: 500px"></canvas>
                 </div>
               </div>
 
@@ -121,14 +136,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="col-lg-6">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Laporan Per Bulan</h5>
-                      <div>
-                          <canvas id="myChartBar" style="width: 500px;height: 500px"></canvas>
+                    <div class="row">
+                      <div class="col-lg-6 mt-2">
+                        <h5 class="card-title">Laporan Per-Bulan</h5>
                       </div>
+                      <div class="col-lg-6">
+                        <input type="month" class="form-control" id="bulanFilter"/>
+                      </div>
+                    </div>
+                  <hr/>
+                    <div id="spinnerMonth" style="display: none;">
+                      <div class="d-flex justify-content-center" >
+                        <div class="spinner-border" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="nilDataMonth"></div>
+                    <canvas id="myChartMonth" style="width: 500px;height: 500px"></canvas>
                   </div>
                 </div>
-  
-              </div>
+            </div>
             <!-- /.col-md-6 -->
             <div class="col-lg-6">
          
@@ -176,88 +204,82 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
 
     $(document).ready(function() {
+        //config harian -----------
+        const ctxPie = document.getElementById('myChartPie').getContext('2d');
+        // console.log(totalsOnlyDays, "cek total hari")
+        const dataPie = {
+                labels: null,
+                datasets: [{
+                        label: 'Data Perhari',
+                        data: null,
+                        backgroundColor: [
+                        'rgb(255, 215, 50)',//kuning
+                        'rgb(255, 50, 100)',//merah
+                        'rgb(0, 215, 117)',//hujau
+                    ],
+                    hoverOffset: 4
+                }]
+                };
+        var myChartTanggal = new Chart(ctxPie, {
+            type: 'pie',
+            data: dataPie,
+            options: {
+              title: {
+                display: true,
+                text: "Expense Categories"
+              },
+              aspectRatio: 1.2
+            }
+        });
+
+        //config bulan -----------
+        const ctxBar = document.getElementById('myChartMonth').getContext('2d');
+        const dataBar = {
+                labels: null,
+                datasets: [{
+                        label: "Data Perbulan",
+                        data: null,
+                        backgroundColor: [
+                        'rgb(255, 215, 50)',//kuning
+                        'rgb(255, 50, 100)',//merah
+                        'rgb(0, 215, 117)',//hujau
+                    ],
+                    hoverOffset: 4
+                }]
+                };
+        var myChartBulan = new Chart(ctxBar, {
+            type: 'bar',
+            data: dataBar,
+            options: {
+              title: {
+                display: true,
+                text: "Expense Categories"
+              }, 
+              aspectRatio: 1.2,
+              plugins: {
+                  legend: {
+                      display: false // Menyembunyikan label dataset
+                  }
+              },
+            }
+        });
+
         $.ajax({
             url: '{{ route("GetLaporan") }}',
             type: 'GET',
-            before: function(data) {
-                    
+            beforeSend: function(data) {
+              $('#spinnerDays').show(500);
+              $('#spinnerMonth').show(500);
+              $("#nilDataDays").empty();
+              $("#nilDataMonth").empty();
             },  
             success: function(data) {
-
-                const ctxPie = document.getElementById('myChartPie').getContext('2d');
-                const totalsOnlyDays = data.dataPerdays.map(item => item.total);
-                
-                console.log(totalsOnlyDays, "cek total hari")
-
-                const dataPie = {
-                        labels: [
-                            'Baik',
-                            'Cukup',
-                            'Kurang'
-                        ],
-                        datasets: [{
-                                label: 'My First Dataset',
-                                data: totalsOnlyDays,
-                                backgroundColor: [
-                                'rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)'
-                            ],
-                            hoverOffset: 4
-                        }]
-                        };
-                var myChart = new Chart(ctxPie, {
-                    type: 'pie',
-                    data: dataPie,
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    }
-                });
-
-                // ------------per month
-                            
-                const ctxBar = document.getElementById('myChartBar').getContext('2d');
-                const totalsOnlymonth = data.dataPerMonth.map(item => item.total);
-                
-                console.log(totalsOnlymonth, "cek total bulan")
-
-                const dataBar = {
-                        labels: [
-                            'Baik',
-                            'Cukup',
-                            'Kurang'
-                        ],
-                        datasets: [{
-                                label: "bar",
-                                data: totalsOnlymonth,
-                                backgroundColor: [
-                                'rgb(255, 99, 132)',
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 205, 86)'
-                            ],
-                            hoverOffset: 4
-                        }]
-                        };
-                var myChart = new Chart(ctxBar, {
-                    type: 'bar',
-                    data: dataBar,
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    }
-                });
-
+              //render data
+              labelsChange(data, "month")
+              labelsChange(data, "days")
+              
+              $('#spinnerDays').hide(500);
+              $('#spinnerMonth').hide(500);
             },
             error: function(data,xhr) {
                 console.log(data)
@@ -265,6 +287,90 @@ scratch. This page gets rid of all links and provides the needed markup only.
             complete: function() {
             }
         });
+
+
+        $('#bulanFilter').on('change', function() {
+            var bulanPilih = $(this).val();
+            $.ajaxSetup({headers:{'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')}});
+            var urlFix = '{{ route("GetLaporan") }}?bulan=' + bulanPilih;
+            $.ajax({
+                url: urlFix,
+                type: 'GET',
+                beforeSend: function(data) {
+                  $('#spinnerMonth').show(500);
+                  $("#nilDataMonth").empty();
+                }, 
+                success: function(data) {
+                  //render ulang data
+                  labelsChange(data, "month")
+                  $('#spinnerMonth').hide(500);
+                },
+                error: function(data,xhr) {
+                    alert("terjadi kesalahan #12kmss")
+                    console.log(data)
+                },
+                complete: function() {
+                }
+            });
+        });
+
+        $('#tanggalFilter').on('change', function() {
+            var tanggalPilih = $(this).val();
+            $.ajaxSetup({headers:{'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')}});
+            var urlFix = '{{ route("GetLaporan") }}?tanggal=' + tanggalPilih;
+            $.ajax({
+                url: urlFix,
+                type: 'GET',
+                beforeSend: function(){
+                  $("#nilDataDays").empty();
+                  $('#spinnerDays').show(500);
+                },
+                success: function(data) {
+                  //render ulang data
+                  labelsChange(data, "days")
+                  $('#spinnerDays').hide(500);
+                },
+                error: function(data,xhr) {
+                    alert("terjadi kesalahan #ds22")
+                    console.log(data)
+                },
+                complete: function() {
+                }
+            });
+        });
+
+        function labelsChange(data, type){
+          if (type == "month") {
+            const combinedDataMonth = data.dataPerMonth.map(item => ({ label: item.value, total: item.total }));
+            const totalsOnlymonth = combinedDataMonth.map(item => item.total);
+            const labelsOnlymonth = combinedDataMonth.map(item => item.label);
+            myChartBulan.data.datasets[0].data = totalsOnlymonth;
+            myChartBulan.data.labels = labelsOnlymonth;
+            myChartBulan.update();
+            
+            nilData(totalsOnlymonth.length, "month");
+            
+          }else if(type == "days"){
+            const combinedDataDays = data.dataPerdays.map(item => ({ label: item.value, total: item.total }));
+            const totalsOnlydays = combinedDataDays.map(item => item.total);
+            const labelsOnlydays = combinedDataDays.map(item => item.label);
+            myChartTanggal.data.datasets[0].data = totalsOnlydays;
+            myChartTanggal.data.labels = labelsOnlydays;
+            myChartTanggal.update();
+            
+            nilData(totalsOnlydays.length, "days");
+
+          }
+        }
+        function nilData(totData, idEl){
+          const htmlRender = '<div class="alert alert-warning" role="alert"><center>Tidak ada data!</center></div>';
+          if (totData == 0 && idEl == "days") {
+              $('#nilDataDays').html(htmlRender);
+          }else if(totData == 0 && idEl == "month"){
+              $('#nilDataMonth').html(htmlRender);
+          }
+        }
+
     });
 </script>
 
