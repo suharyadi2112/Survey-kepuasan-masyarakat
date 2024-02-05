@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="{{ url('css/screen.css') }}">
     <link rel="stylesheet" href="{{ url('css/main.css') }}">
     <link rel="stylesheet" href="{{ url('css/bootstrap.css') }}">
-
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Survey Kepuasan Masyarakat</title>
 </head>
 <body>
@@ -22,13 +24,6 @@
                 {{-- <div id="succesalert">
               
                 </div> --}}
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
                 <br>
                 <br>
                 <br>
@@ -99,8 +94,9 @@
                             </td>
                         </tr>
                     </table>
-                <br><br><br><br>
-                <h2><font color="white">SURVEY KEPUASAN MASYARAKAT<br> RSUD RAJA AHMAD TABIB</font></h2>
+                    <br><br><br>
+                    
+                    <h2> <font color="white">SURVEY KEPUASAN MASYARAKAT<br> RSUD RAJA AHMAD TABIB</font></h2>
                 </center>
             </div>
         </div>
@@ -111,13 +107,11 @@
     <script src="{{ url('js/jquery.min.js') }}"></script>
     <script src="{{ url('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url('js/popper.min.js') }}"></script>
-    <script src="/js/app.js"></script>
+    <script src="{{ url('js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <script type="text/javascript">
-
-    $(document).ready(function() {
 
     $(document).on('submit', '.InputSurvey', function(e) {
 	    e.preventDefault();
@@ -190,8 +184,6 @@
             },
         });
 	});    
-    
-});
 
     </script>
 
