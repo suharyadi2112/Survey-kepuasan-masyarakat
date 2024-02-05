@@ -13,7 +13,7 @@
 </head>
 <body>
     
-    <div style="background-color: rgba(4, 11, 2, 0.5);">
+    <div style="background-color: rgb(4, 11, 2);">
     <div class="demo-wrap">
         <img class="demo-bg" src="{{ url('bg.png') }}"  alt="">
         <div class="demo-content">
@@ -22,7 +22,14 @@
                 {{-- <div id="succesalert">
               
                 </div> --}}
-                <h2>SURVEY KEPUASAN MASYARAKAT<br> RSUD RAJA AHMAD TABIB</h2>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
                 <br>
                 <br>
                 <center>
@@ -92,6 +99,8 @@
                             </td>
                         </tr>
                     </table>
+                <br><br><br><br>
+                <h2><font color="white">SURVEY KEPUASAN MASYARAKAT<br> RSUD RAJA AHMAD TABIB</font></h2>
                 </center>
             </div>
         </div>
@@ -107,6 +116,8 @@
 
 
     <script type="text/javascript">
+
+    $(document).ready(function() {
 
     $(document).on('submit', '.InputSurvey', function(e) {
 	    e.preventDefault();
@@ -179,6 +190,8 @@
             },
         });
 	});    
+    
+});
 
     </script>
 
