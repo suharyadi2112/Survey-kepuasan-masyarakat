@@ -12,18 +12,17 @@
     <title>Survey Kepuasan Masyarakat</title>
 </head>
 <body>
+    
+    <div style="background-color: rgba(4, 11, 2, 0.5);">
     <div class="demo-wrap">
-        <img class="demo-bg" src="{{ url('bg.png') }}" alt="">
+        <img class="demo-bg" src="{{ url('bg.png') }}"  alt="">
         <div class="demo-content">
             <div class="mainbox">
 
-                @if (session()->has('success'))
-                    <div class="alert alert-success alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        {{ session()->get('success') }}
-                    </div>
-                @endif
-                <h2>SURVEY KEPUASAN MASYARAKAT</h2>
+                {{-- <div id="succesalert">
+              
+                </div> --}}
+                <h2>SURVEY KEPUASAN MASYARAKAT<br> RSUD RAJA AHMAD TABIB</h2>
                 <br>
                 <br>
                 <center>
@@ -43,24 +42,52 @@
                         </tr>
                         <tr>
                             <td>
-                                <form action="{{ route('kirim') }}" method="POST">
+                                <form data-route="{{ route('kirim') }}" method="POST" class="InputSurvey">
                                     @csrf
-                                    <input type="hidden" value="baik" name="value">
-                                    <button class="tombolsurvey" style="background: green">BAIK</button>
+                                    <input type="hidden" id="baik" data-idspin="spinBaik" value="baik" name="value">
+                                    <button type="submit" class="tombolsurvey" style="background: green">
+                                        <div id="spinBaik" style="display: none;">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="spinner-border" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        BAIK
+                                    </button>
                                 </form>
                             </td>
                             <td>
-                                <form action="{{ route('kirim') }}" method="POST">
+                                <form data-route="{{ route('kirim') }}" method="POST" class="InputSurvey">
                                     @csrf
-                                    <input type="hidden" value="cukup" name="value">
-                                    <button class="tombolsurvey" style="background: yellow;color:black">CUKUP</button>
+                                    <input type="hidden" id="cukup" data-idspin="spinCukup" value="cukup" name="value">
+                                    <button type="submit" class="tombolsurvey" style="background: yellow;color:black">
+                                        <div id="spinCukup" style="display: none;">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="spinner-border" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        CUKUP
+                                    </button>
                                 </form>
                             </td>
                             <td>
-                                <form action="{{ route('kirim') }}" method="POST">
+                                <form data-route="{{ route('kirim') }}" method="POST" class="InputSurvey">
                                     @csrf
-                                    <input type="hidden" value="kurang" name="value">
-                                    <button class="tombolsurvey" style="background: red">KURANG</button>
+                                    <input type="hidden" id="kurang" data-idspin="spinKurang" value="kurang" name="value">
+                                    
+                                    <button type="submit" class="tombolsurvey" style="background: red">
+                                        <div id="spinKurang" style="display: none;">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="spinner-border" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        KURANG
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -69,11 +96,93 @@
             </div>
         </div>
     </div>
+    </div>
 
+    
     <script src="{{ url('js/jquery.min.js') }}"></script>
     <script src="{{ url('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url('js/popper.min.js') }}"></script>
+    <script src="/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script type="text/javascript">
+
+    $(document).on('submit', '.InputSurvey', function(e) {
+	    e.preventDefault();
+	    var route = $('.InputSurvey').data('route');
+	    var form_data = $(this);
+        var valSpinKurang = $('#kurang').data("idspin");
+        var valSpinCukup = $('#cukup').data("idspin");
+        var valSpinBaik = $('#baik').data("idspin");
+        $.ajaxSetup({headers:{'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')}});
+        $.ajax({
+            type: 'POST',
+            url: route,
+            data: form_data.serialize(),
+            beforeSend: function() {
+                $('#'+valSpinKurang+'').show();
+                $('#'+valSpinCukup+'').show();
+                $('#'+valSpinBaik+'').show();
+            },
+            success: function(data) {   
+                $('#'+valSpinKurang+'').hide();
+                $('#'+valSpinCukup+'').hide();
+                $('#'+valSpinBaik+'').hide();
+                // $('#succesalert').html('<div class="alert alert-success alert-dismissible">'+
+                //         '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
+                //         ''+data.message+''+
+                //         '</div>')
+                // setTimeout(myGreeting, 5000);
+                console.log(data.message, "cek message")
+
+                let timerInterval;
+                Swal.fire({
+                    title: "Terima Kasih!",
+                    // text: "",
+                    html: "Atas dukungan dan partisipasinya dalam survey ini. Kontribusi anda sangat berharga untuk perbaikan dan pengembangan lebih lanjut. <br><b></b>.",
+                    imageUrl: "https://rsudtpi.kepriprov.go.id/baru/wp-content/uploads/2021/12/IMG_0366.jpg",
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    imageAlt: "Custom image",
+                    // timer: 10000, 
+                    // onClose: () => {
+                    //     console.log("Modal closed automatically after 3 seconds");
+                    // }
+                    timer: 10000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        // timerInterval = setInterval(() => {
+                        // timer.textContent = `${Swal.getTimerLeft()}`;
+                        // }, 100);
+                        timerInterval = setInterval(() => {
+                        const remainingTime = Math.round(Swal.getTimerLeft() / 1000); 
+                            timer.textContent = `${remainingTime}`;
+                            timer.style.fontSize = '40px';
+                            timer.style.color = 'red';
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                });
+
+            },
+            complete: function() {
+            },
+            error: function(data,xhr) {
+                alert("Failed response")
+            },
+        });
+	});    
+
+    </script>
 
 </body>
+    
 
 </html>
