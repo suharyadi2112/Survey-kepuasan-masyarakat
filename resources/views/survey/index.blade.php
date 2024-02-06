@@ -17,7 +17,7 @@
     
     {{-- <div style="background-color: rgba(0, 0, 0, 0.193);"> --}}
     <div class="demo-wrap">
-        <img class="demo-bg" src="{{ url('banner.png') }}"  alt="" style="width: 100%; opacity: 1">
+        <img class="demo-bg" src="{{ url('Banner_new.png') }}"  alt="" style="width: 100%; opacity: 1">
         <div class="demo-content">
             <div class="mainbox">
 
