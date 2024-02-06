@@ -4,7 +4,7 @@ body
 	padding: 0;
 	color: #555;
 	font: normal 10pt Arial,Helvetica,sans-serif;
-	background-image: linear-gradient(rgb(113, 186, 247), white,rgb(113, 186, 247));
+	/* background-image: linear-gradient(rgb(113, 186, 247), white,rgb(113, 186, 247)); */
 	height: 100vh;
 }
 
