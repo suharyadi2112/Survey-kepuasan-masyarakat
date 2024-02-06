@@ -184,7 +184,9 @@
             complete: function() {
             },
             error: function(data,xhr) {
-                alert("Failed response")
+                alert("Failed response");
+                
+                location.reload();
             },
         });
 	});    
