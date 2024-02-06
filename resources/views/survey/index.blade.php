@@ -15,9 +15,9 @@
 </head>
 <body>
     
-    <div style="background-color: rgb(1, 17, 4);">
+    {{-- <div style="background-color: rgba(0, 0, 0, 0.193);"> --}}
     <div class="demo-wrap">
-        <img class="demo-bg" src="{{ url('bg.png') }}"  alt="" style="width: 100%">
+        <img class="demo-bg" src="{{ url('banner.png') }}"  alt="" style="width: 100%; opacity: 1">
         <div class="demo-content">
             <div class="mainbox">
 
@@ -25,6 +25,9 @@
               
                 </div> --}}
                 
+                <br>
+                <br>
+                <br>
                 <br>
                 <br>
                 <br>
@@ -97,12 +100,12 @@
                     </table>
                     <br><br><br>
                     
-                    <h2> <font color="white">SURVEY KEPUASAN MASYARAKAT<br> RSUD RAJA AHMAD TABIB</font></h2>
+                    <h2> <font color="black">SURVEY KEPUASAN MASYARAKAT<br> RSUD RAJA AHMAD TABIB</font></h2>
                 </center>
             </div>
         </div>
     </div>
-    </div>
+    {{-- </div> --}}
 
     
     <script src="{{ url('js/jquery.min.js') }}"></script>
