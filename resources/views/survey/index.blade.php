@@ -15,15 +15,16 @@
 </head>
 <body>
     
-    <div style="background-color: rgb(4, 11, 2);">
+    <div style="background-color: rgb(1, 17, 4);">
     <div class="demo-wrap">
-        <img class="demo-bg" src="{{ url('bg.png') }}"  alt="">
+        <img class="demo-bg" src="{{ url('bg.png') }}"  alt="" style="width: 100%">
         <div class="demo-content">
             <div class="mainbox">
 
                 {{-- <div id="succesalert">
               
                 </div> --}}
+                
                 <br>
                 <br>
                 <br>

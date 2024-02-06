@@ -69,6 +69,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
+            'table' => 'users',
+            'email' => 'email',  // Use 'email' for email authentication
+            'username' => 'username',  // Use 'username' for username authentication
+            'password' => 'password',
         ],
 
         // 'users' => [
